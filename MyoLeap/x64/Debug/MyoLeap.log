@@ -1,0 +1,9 @@
+﻿  MyoLeap.cpp
+c:\users\chris sheng\documents\robotic arm internship\myoleap\myoleap\myo\include\myo\cxx\detail\throwonerror.hpp(39): warning C4297: 'myo::ThrowOnError::~ThrowOnError': function assumed not to throw an exception but does
+  c:\users\chris sheng\documents\robotic arm internship\myoleap\myoleap\myo\include\myo\cxx\detail\throwonerror.hpp(39): note: destructor or deallocator has a (possibly implicit) non-throwing exception specification
+c:\users\chris sheng\documents\robotic arm internship\myoleap\myoleap\myo\include\myo\cxx\detail\throwonerror.hpp(45): warning C4297: 'myo::ThrowOnError::~ThrowOnError': function assumed not to throw an exception but does
+  c:\users\chris sheng\documents\robotic arm internship\myoleap\myoleap\myo\include\myo\cxx\detail\throwonerror.hpp(45): note: destructor or deallocator has a (possibly implicit) non-throwing exception specification
+  MyoLeap.vcxproj -> C:\Users\Chris Sheng\Documents\Robotic Arm Internship\MyoLeap\x64\Debug\MyoLeap.exe
+  MyoLeap.vcxproj -> C:\Users\Chris Sheng\Documents\Robotic Arm Internship\MyoLeap\x64\Debug\MyoLeap.pdb (Partial PDB)
+  C:\Users\Chris Sheng\Documents\Robotic Arm Internship\MyoLeap\MyoLeap\LeapSDK\lib\x64\Leap.dll
+  1 File(s) copied
