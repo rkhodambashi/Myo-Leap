@@ -39,55 +39,56 @@ using namespace std;
 //#define SERVER "128.61.126.213"  //ip address of udp server
 
 #define BUFLEN 512  //Max length of buffer
-#define PORT 8888   //The port on which to listen for incoming data
+#define PORT 8888  //The port on which to listen for incoming data
 
-struct sockaddr_in si_other;
-int s, slen = sizeof(si_other);
-char buf[BUFLEN];
-char message[BUFLEN];
-WSADATA wsa;
-
-/// <summary>
-/// Entry point for the application
-/// </summary>
-/// <param name="hInstance">handle to the application instance</param>
-/// <param name="hPrevInstance">always 0</param>
-/// <param name="lpCmdLine">command line arguments</param>
-/// <param name="nCmdShow">whether to display minimized, maximized, or normally</param>
-/// <returns>status</returns>
-int APIENTRY wWinMain(
-	_In_ HINSTANCE hInstance,
-	_In_opt_ HINSTANCE hPrevInstance,
-	_In_ LPWSTR lpCmdLine,
-	_In_ int nShowCmd
-)
-{
-	//Initialise winsock
-	printf("\nInitialising Winsock...");
-	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
-	{
-		printf("Failed. Error Code : %d", WSAGetLastError());
-		exit(EXIT_FAILURE);
-	}
-	printf("Initialised.\n");
-
-	//create socket
-	if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == SOCKET_ERROR)
-	{
-		printf("socket() failed with error code : %d", WSAGetLastError());
-		exit(EXIT_FAILURE);
-	}
-
-	//setup address structure
-	memset((char *)&si_other, 0, sizeof(si_other));
-	si_other.sin_family = AF_INET;
-	si_other.sin_port = htons(PORT);
-	//si_other.sin_addr.S_un.S_addr = inet_addr(SERVER);
-	si_other.sin_addr.S_un.S_addr = inet_pton(AF_INET, SERVER, &(si_other.sin_addr));
-
-	closesocket(s);
-	WSACleanup();
-}
+//struct sockaddr_in si_other;
+//int s, slen = sizeof(si_other);
+//char buf[BUFLEN];
+//char message[BUFLEN];
+//WSADATA wsa;
+//
+///// <summary>
+///// Entry point for the application
+///// </summary>
+///// <param name="hInstance">handle to the application instance</param>
+///// <param name="hPrevInstance">always 0</param>
+///// <param name="lpCmdLine">command line arguments</param>
+///// <param name="nCmdShow">whether to display minimized, maximized, or normally</param>
+///// <returns>status</returns>
+//int APIENTRY wWinMain(
+//	_In_ HINSTANCE hInstance,
+//	_In_opt_ HINSTANCE hPrevInstance,
+//	_In_ LPWSTR lpCmdLine,
+//	_In_ int nShowCmd
+//)
+//{
+//	//Initialise winsock
+//	printf("\nInitialising Winsock...");
+//	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+//	{
+//		printf("Failed. Error Code : %d", WSAGetLastError());
+//		exit(EXIT_FAILURE);
+//	}
+//	printf("Initialised.\n");
+//
+//	//create socket
+//	//if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == SOCKET_ERROR)
+//	if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
+//	{
+//		printf("socket() failed with error code : %d", WSAGetLastError());
+//		exit(EXIT_FAILURE);
+//	}
+//
+//	//setup address structure
+//	memset((char *)&si_other, 0, sizeof(si_other));
+//	si_other.sin_family = AF_INET;
+//	si_other.sin_port = htons(PORT);
+//	//si_other.sin_addr.S_un.S_addr = inet_addr(SERVER);
+//	si_other.sin_addr.S_un.S_addr = inet_pton(AF_INET, SERVER, &(si_other.sin_addr));
+//
+//	//closesocket(s);
+//	//WSACleanup();
+//}
 /*
 // Helper function for textual date and time.
 // TMSZ must allow extra character for the null terminator.
@@ -142,7 +143,7 @@ public:
 	// For this example, the functions overridden above are sufficient.
 
 
-	string print()
+	void print()
 	{
 		//int count = 0;
 		//char buff[TMSZ];
@@ -161,7 +162,6 @@ public:
 			//myfile<<endl;
 			//myfile << '[' << emgString << std::string(4 - emgString.size(), ' ') << ']'; 
 			myfile << emgString << ' ';
-			return emgString;
 			//count++;
 		}
 		/*myfile << "Time elapsed: "
@@ -357,6 +357,41 @@ double SampleListener::mapping(double x, double x1, double x2)
 
 int main(int argc, char** argv)
 {
+	struct sockaddr_in si_other;
+	int s, slen = sizeof(si_other);
+	char buf[BUFLEN];
+	char message[BUFLEN];
+	WSADATA wsa;
+
+	//Initialise winsock
+	printf("\nInitialising Winsock...");
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+	{
+		printf("Failed. Error Code : %d", WSAGetLastError());
+		exit(EXIT_FAILURE);
+	}
+	printf("Initialised.\n");
+
+	//create socket
+	//if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == SOCKET_ERROR)
+	if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
+	{
+		printf("socket() failed with error code : %d", WSAGetLastError());
+		exit(EXIT_FAILURE);
+	}
+	char str[INET_ADDRSTRLEN];
+	//setup address structure
+	memset((char *)&si_other, 0, sizeof(si_other));
+	si_other.sin_family = AF_INET;
+	si_other.sin_port = htons(PORT);
+	//si_other.sin_addr.S_un.S_addr = inet_pton(AF_INET, SERVER, &(si_other.sin_addr));
+	inet_pton(AF_INET, SERVER, &(si_other.sin_addr.S_un.S_addr));
+	/*if (inet_pton(AF_INET, SERVER, &(si_other.sin_addr.S_un.S_addr)))
+	{
+		inet_ntop(AF_INET, &(si_other.sin_addr.S_un.S_addr), str, INET_ADDRSTRLEN);
+		std::cout << ("%s\n", str);
+	}*/
+
 	// We catch any exceptions that might occur below -- see the catch statement for more details.
 	try {
 
@@ -436,15 +471,16 @@ int main(int argc, char** argv)
 					h++;
 						if (i == 5 && j == 6 && h == 5)
 						{
-							//string tmp = to_string(fingDis[0]) + " " + to_string(fingDis[1]) + " " + to_string(fingDis[2]) + to_string(fingDis[3]) + " " + to_string(fingDis[4]);
-							string tmp = collector.print();
+							string tmp = to_string(fingDis[0]) + " " + to_string(fingDis[1]) + " " + to_string(fingDis[2]) + " " + to_string(fingDis[3]) + " " + to_string(fingDis[4]);
+							//string tmp = to_string('0');
 							strcpy_s(message, tmp.c_str());
 							//send message
 							if (sendto(s, message, strlen(message), 0, (struct sockaddr *) &si_other, slen) == SOCKET_ERROR)
 							{
 								printf("sendto() failed with error code : %d", WSAGetLastError());
-								exit(EXIT_FAILURE);
+								//exit(EXIT_FAILURE);
 							}
+							std::cout << "Data Sent";
 							i = 0;
 							j = 1;
 							h = 0;
@@ -459,7 +495,7 @@ int main(int argc, char** argv)
 			myfile << " Time elasped: " << timeElasped << endl;
 
 		}
-
+		
 		// If a standard exception occurred, we print out its message and exit.
 	}
 	catch (const std::exception& e) {
@@ -468,4 +504,6 @@ int main(int argc, char** argv)
 		std::cin.ignore();
 		return 1;
 	}
+	closesocket(s);
+	WSACleanup();
 }
