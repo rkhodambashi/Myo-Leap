@@ -73,7 +73,7 @@
     <LibraryPath>C:\Users\Chris Sheng\Documents\Robotic Arm Internship\MyoLeap\MyoLeap\Myo\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)\MyoLeap\LeapSDK\include;$(SolutionDir)\MyoLeap\Myo\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\Arduino\hardware;C:\Program Files %28x86%29\Arduino\libraries;$(SolutionDir)\MyoLeap\LeapSDK\include;$(SolutionDir)\MyoLeap\Myo\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\MyoLeap\LeapSDK\lib;$(SolutionDir)\MyoLeap\Myo\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -101,7 +101,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)\MyoLeap\LeapSDK\lib\x64;$(SolutionDir)\MyoLeap\Myo\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>myo64.lib;Leap.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>myo64.lib;Leap.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
