@@ -24,14 +24,74 @@
 #include <math.h>
 #include "Leap.h"
 #include <myo/myo.hpp>
+#include <winsock2.h>
+#include <stdio.h>
+#include <strsafe.h>
+#include <WS2tcpip.h>
+
+#pragma comment(lib,"ws2_32.lib")
 
 using namespace Leap;
 using namespace std;
 
+// UDP set up
+#define SERVER "127.0.0.1" //ip address of udp server
+//#define SERVER "128.61.126.213"  //ip address of udp server
+
+#define BUFLEN 512  //Max length of buffer
+#define PORT 8888   //The port on which to listen for incoming data
+
+struct sockaddr_in si_other;
+int s, slen = sizeof(si_other);
+char buf[BUFLEN];
+char message[BUFLEN];
+WSADATA wsa;
+
+/// <summary>
+/// Entry point for the application
+/// </summary>
+/// <param name="hInstance">handle to the application instance</param>
+/// <param name="hPrevInstance">always 0</param>
+/// <param name="lpCmdLine">command line arguments</param>
+/// <param name="nCmdShow">whether to display minimized, maximized, or normally</param>
+/// <returns>status</returns>
+int APIENTRY wWinMain(
+	_In_ HINSTANCE hInstance,
+	_In_opt_ HINSTANCE hPrevInstance,
+	_In_ LPWSTR lpCmdLine,
+	_In_ int nShowCmd
+)
+{
+	//Initialise winsock
+	printf("\nInitialising Winsock...");
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+	{
+		printf("Failed. Error Code : %d", WSAGetLastError());
+		exit(EXIT_FAILURE);
+	}
+	printf("Initialised.\n");
+
+	//create socket
+	if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == SOCKET_ERROR)
+	{
+		printf("socket() failed with error code : %d", WSAGetLastError());
+		exit(EXIT_FAILURE);
+	}
+
+	//setup address structure
+	memset((char *)&si_other, 0, sizeof(si_other));
+	si_other.sin_family = AF_INET;
+	si_other.sin_port = htons(PORT);
+	//si_other.sin_addr.S_un.S_addr = inet_addr(SERVER);
+	si_other.sin_addr.S_un.S_addr = inet_pton(AF_INET, SERVER, &(si_other.sin_addr));
+
+	closesocket(s);
+	WSACleanup();
+}
+/*
 // Helper function for textual date and time.
 // TMSZ must allow extra character for the null terminator.
 
-/*
 #define TMFMT "        %H:%M:%S "
 #define TMSZ 18
 static char *getTm(char *buff) {
@@ -40,8 +100,10 @@ static char *getTm(char *buff) {
 	return buff;
 }
 */
-std::stack<clock_t> tictoc_stack;
+
+std::stack<clock_t> tictoc_stack;   // adding clock_t to the stack
 ofstream myfile;
+
 
 class DataCollector : public myo::DeviceListener {
 	friend class SampleListener;
@@ -80,7 +142,7 @@ public:
 	// For this example, the functions overridden above are sufficient.
 
 
-	void print()
+	string print()
 	{
 		//int count = 0;
 		//char buff[TMSZ];
@@ -99,6 +161,7 @@ public:
 			//myfile<<endl;
 			//myfile << '[' << emgString << std::string(4 - emgString.size(), ' ') << ']'; 
 			myfile << emgString << ' ';
+			return emgString;
 			//count++;
 		}
 		/*myfile << "Time elapsed: "
@@ -350,6 +413,8 @@ int main(int argc, char** argv)
 			collector.print();
 			int i = 0;
 			int j = 1;
+			int h = 0;
+			double fingDis[5];
 			const Frame frame = controller.frame();
 			HandList hands = frame.hands();
 			for (HandList::const_iterator hl = hands.begin(); hl != hands.end(); ++hl) {
@@ -361,19 +426,32 @@ int main(int argc, char** argv)
 				for (FingerList::const_iterator fl = fingers.begin(); fl != fingers.end(); ++fl) {
 					const Finger finger = *fl;
 
-					myfile << std::string(4, ' ') << fingerNames[finger.type()]
+					/*myfile << std::string(4, ' ') << fingerNames[finger.type()]
 						<< ": " << hand.palmPosition().distanceTo(finger.tipPosition());
 					myfile << std::string(4, ' ') << fingerNames[finger.type()]
-						<< ": " << listener.mapping(hand.palmPosition().distanceTo(finger.tipPosition()), minMax[i + i], minMax[i + j]);
+						<< ": " << listener.mapping(hand.palmPosition().distanceTo(finger.tipPosition()), minMax[i + i], minMax[i + j]);*/
+					fingDis[h] = listener.mapping(hand.palmPosition().distanceTo(finger.tipPosition()), minMax[i + i], minMax[i + j]);
 					i++;
 					j++;
-						if (i == 5 && j == 6)
+					h++;
+						if (i == 5 && j == 6 && h == 5)
 						{
+							//string tmp = to_string(fingDis[0]) + " " + to_string(fingDis[1]) + " " + to_string(fingDis[2]) + to_string(fingDis[3]) + " " + to_string(fingDis[4]);
+							string tmp = collector.print();
+							strcpy_s(message, tmp.c_str());
+							//send message
+							if (sendto(s, message, strlen(message), 0, (struct sockaddr *) &si_other, slen) == SOCKET_ERROR)
+							{
+								printf("sendto() failed with error code : %d", WSAGetLastError());
+								exit(EXIT_FAILURE);
+							}
 							i = 0;
 							j = 1;
+							h = 0;
 						}
 				}
 			}
+
 			timeElasped = timeElasped + ((double)(clock() - tictoc_stack.top())) / CLOCKS_PER_SEC;
 			/*myfile << " Time elapsed: "
 				<< ((double)(clock() - tictoc_stack.top())) / CLOCKS_PER_SEC;*/
