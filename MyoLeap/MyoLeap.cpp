@@ -14,6 +14,7 @@
 #include <array>
 #include <cstring>
 #include <iostream>
+#include <iomanip>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -436,10 +437,12 @@ int main(int argc, char** argv)
 		if (argc > 1 && strcmp(argv[1], "--bg") == 0)
 			controller.setPolicy(Leap::Controller::POLICY_BACKGROUND_FRAMES);
 		
-		
+		myfile << std::fixed;
+		myfile << std::setprecision(2);
+
 		// Finally we enter our main loop.
 		while (1) {
-			collector.tic();
+			//collector.tic();
 			// In each iteration of our main loop, we run the Myo event loop for a set number of milliseconds.
 			// In this case, we wish to update our display 50 times a second, so we run for 1000/20 milliseconds.
 			hub.run(1000 / 100);
@@ -461,11 +464,11 @@ int main(int argc, char** argv)
 				for (FingerList::const_iterator fl = fingers.begin(); fl != fingers.end(); ++fl) {
 					const Finger finger = *fl;
 
+					//myfile << " " << hand.palmPosition().distanceTo(finger.tipPosition());
 					/*myfile << std::string(4, ' ') << fingerNames[finger.type()]
-						<< ": " << hand.palmPosition().distanceTo(finger.tipPosition());
-					myfile << std::string(4, ' ') << fingerNames[finger.type()]
 						<< ": " << listener.mapping(hand.palmPosition().distanceTo(finger.tipPosition()), minMax[i + i], minMax[i + j]);*/
 					fingDis[h] = listener.mapping(hand.palmPosition().distanceTo(finger.tipPosition()), minMax[i + i], minMax[i + j]);
+					//fingDis[h] = hand.palmPosition().distanceTo(finger.tipPosition());
 					i++;
 					j++;
 					h++;
@@ -488,11 +491,11 @@ int main(int argc, char** argv)
 				}
 			}
 
-			timeElasped = timeElasped + ((double)(clock() - tictoc_stack.top())) / CLOCKS_PER_SEC;
+			//timeElasped = timeElasped + ((double)(clock() - tictoc_stack.top())) / CLOCKS_PER_SEC;
 			/*myfile << " Time elapsed: "
 				<< ((double)(clock() - tictoc_stack.top())) / CLOCKS_PER_SEC;*/
-			tictoc_stack.pop();
-			myfile << " Time elasped: " << timeElasped << endl;
+			//tictoc_stack.pop();
+			//myfile << " " << timeElasped << endl;
 
 		}
 		
