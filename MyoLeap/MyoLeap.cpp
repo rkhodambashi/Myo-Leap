@@ -28,8 +28,13 @@
 #include <stdio.h>
 #include <strsafe.h>
 #include <WS2tcpip.h>
+#include <windows.h>
+#include <conio.h>
+#include "dynamixel.h"
 
 #pragma comment(lib,"ws2_32.lib")
+#pragma comment(lib, "dynamixel.lib")
+
 
 using namespace Leap;
 using namespace std;
@@ -41,6 +46,27 @@ using namespace std;
 #define BUFLEN 512  //Max length of buffer
 #define PORT 8888  //The port on which to listen for incoming data
 
+// Control table address
+#define P_GOAL_POSITION_L		30
+#define P_GOAL_POSITION_H		31
+#define P_PRESENT_POSITION_L	36
+#define P_PRESENT_POSITION_H	37
+#define P_MOVING				46
+
+int P_GOAL_POSITION_Thumb;
+int P_GOAL_POSITION_Index;
+int P_GOAL_POSITION_Middle;
+int P_GOAL_POSITION_Ring;
+int P_GOAL_POSITION_Pinky;
+
+// Defulat setting
+#define DEFAULT_PORTNUM		6 // COM3
+#define DEFAULT_BAUDNUM		7 // 1Mbps
+#define DEFAULT_ID			4
+
+
+void PrintCommStatus(int CommStatus);
+void PrintErrorCode();
 //struct sockaddr_in si_other;
 //int s, slen = sizeof(si_other);
 //char buf[BUFLEN];
@@ -190,7 +216,7 @@ public:
 	virtual void onDeviceChange(const Controller&);
 	virtual void onServiceConnect(const Controller&);
 	virtual void onServiceDisconnect(const Controller&);
-	virtual double mapping(double x, double x1, double x2);
+	virtual double mapping(double x, double x1, double x2, double y1, double y2);
 	/*SampleListener()
 	{
 		myfile.open("LeapData.txt");
@@ -348,10 +374,10 @@ void SampleListener::onServiceDisconnect(const Controller& controller) {
 	std::cout << "Service Disconnected" << std::endl;
 }
 
-double SampleListener::mapping(double x, double x1, double x2)
+double SampleListener::mapping(double x, double x1, double x2, double y1, double y2)
 {
-	double y;
-	y = (180 / (x2 - x1))*(x - x1);
+	int y;
+	y = ((y2 - y1 )/ (x2 - x1))*(x - x1) + y1;
 	return y;
 }
 
@@ -392,6 +418,22 @@ int main(int argc, char** argv)
 		std::cout << ("%s\n", str);
 	}*/
 
+	int GoalPos[2] = { 0, 1023 };
+	//int GoalPos[2] = {0, 4095}; // for EX serise
+	int index = 0;
+	int Moving, PresentPos;
+	int CommStatus;
+	// Open device MOTORS
+	if (dxl_initialize(DEFAULT_PORTNUM, DEFAULT_BAUDNUM) == 0)
+	{
+		printf("Failed to open USB2Dynamixel!\n");
+		printf("Press any key to terminate...\n");
+		//getch();
+		return 0;
+	}
+	else
+		printf("Succeed to open USB2Dynamixel!\n");
+
 	// We catch any exceptions that might occur below -- see the catch statement for more details.
 	try {
 
@@ -425,8 +467,8 @@ int main(int argc, char** argv)
 		// Next we construct an instance of our DeviceListener, so that we can register it with the Hub.
 		DataCollector collector;
 		double timeElasped = 0.000;
-		const double minMax[10] = { 32, 85, 36, 100, 37, 107, 36, 100, 36, 90 }; //T.I.M.R.P
-
+		const double minMax[10] = { 38, 85, 36, 104, 37, 111, 36, 105, 36, 96 }; // Min and Max values for each finger T.I.M.R.P 
+		const int minMaxMotors[10] = { 0, 0, 500, 1100, 0, 0, 0, 0, 0, 0 };
 		// Hub::addListener() takes the address of any object whose class inherits from DeviceListener, and will cause
 		// Hub::run() to send events to all registered device listeners.
 		hub.addListener(&collector);
@@ -439,7 +481,7 @@ int main(int argc, char** argv)
 		
 		// Finally we enter our main loop.
 		while (1) {
-			collector.tic();
+			//collector.tic();
 			// In each iteration of our main loop, we run the Myo event loop for a set number of milliseconds.
 			// In this case, we wish to update our display 50 times a second, so we run for 1000/20 milliseconds.
 			hub.run(1000 / 100);
@@ -462,23 +504,25 @@ int main(int argc, char** argv)
 					const Finger finger = *fl;
 
 					/*myfile << std::string(4, ' ') << fingerNames[finger.type()]
-						<< ": " << hand.palmPosition().distanceTo(finger.tipPosition());
-					myfile << std::string(4, ' ') << fingerNames[finger.type()]
+						<< ": " << hand.palmPosition().distanceTo(finger.tipPosition());*/
+					/*myfile << std::string(4, ' ') << fingerNames[finger.type()]
 						<< ": " << listener.mapping(hand.palmPosition().distanceTo(finger.tipPosition()), minMax[i + i], minMax[i + j]);*/
-					fingDis[h] = listener.mapping(hand.palmPosition().distanceTo(finger.tipPosition()), minMax[i + i], minMax[i + j]);
+					fingDis[h] = listener.mapping(hand.palmPosition().distanceTo(finger.tipPosition()), minMax[i + 1], minMax[i + j], minMaxMotors[i + 1], minMaxMotors[i + j]);
+					//fingDis[h] = hand.palmPosition().distanceTo(finger.tipPosition());
 					i++;
 					j++;
 					h++;
 						if (i == 5 && j == 6 && h == 5)
 						{
+							dxl_write_word(DEFAULT_ID, P_GOAL_POSITION_L, fingDis[1]);
+							//send over UDP
 							string tmp = to_string(fingDis[0]) + " " + to_string(fingDis[1]) + " " + to_string(fingDis[2]) + " " + to_string(fingDis[3]) + " " + to_string(fingDis[4]);
-							//string tmp = to_string('0');
 							strcpy_s(message, tmp.c_str());
 							//send message
 							if (sendto(s, message, strlen(message), 0, (struct sockaddr *) &si_other, slen) == SOCKET_ERROR)
 							{
 								printf("sendto() failed with error code : %d", WSAGetLastError());
-								//exit(EXIT_FAILURE);
+								exit(EXIT_FAILURE);
 							}
 							std::cout << "Data Sent";
 							i = 0;
@@ -488,11 +532,11 @@ int main(int argc, char** argv)
 				}
 			}
 
-			timeElasped = timeElasped + ((double)(clock() - tictoc_stack.top())) / CLOCKS_PER_SEC;
+			//timeElasped = timeElasped + ((double)(clock() - tictoc_stack.top())) / CLOCKS_PER_SEC;
 			/*myfile << " Time elapsed: "
 				<< ((double)(clock() - tictoc_stack.top())) / CLOCKS_PER_SEC;*/
-			tictoc_stack.pop();
-			myfile << " Time elasped: " << timeElasped << endl;
+			//tictoc_stack.pop();
+			//myfile << " Time elasped: " << timeElasped << endl;
 
 		}
 		
@@ -506,4 +550,70 @@ int main(int argc, char** argv)
 	}
 	closesocket(s);
 	WSACleanup();
+
+	// Close device
+	dxl_terminate();
+	printf("Press any key to terminate...\n");
+	//getch();
+	return 0;
+}
+
+// Print communication result
+void PrintCommStatus(int CommStatus)
+{
+	switch (CommStatus)
+	{
+	case COMM_TXFAIL:
+		printf("COMM_TXFAIL: Failed transmit instruction packet!\n");
+		break;
+
+	case COMM_TXERROR:
+		printf("COMM_TXERROR: Incorrect instruction packet!\n");
+		break;
+
+	case COMM_RXFAIL:
+		printf("COMM_RXFAIL: Failed get status packet from device!\n");
+		break;
+
+	case COMM_RXWAITING:
+		printf("COMM_RXWAITING: Now recieving status packet!\n");
+		break;
+
+	case COMM_RXTIMEOUT:
+		printf("COMM_RXTIMEOUT: There is no status packet!\n");
+		break;
+
+	case COMM_RXCORRUPT:
+		printf("COMM_RXCORRUPT: Incorrect status packet!\n");
+		break;
+
+	default:
+		printf("This is unknown error code!\n");
+		break;
+	}
+}
+
+// Print error bit of status packet
+void PrintErrorCode()
+{
+	if (dxl_get_rxpacket_error(ERRBIT_VOLTAGE) == 1)
+		printf("Input voltage error!\n");
+
+	if (dxl_get_rxpacket_error(ERRBIT_ANGLE) == 1)
+		printf("Angle limit error!\n");
+
+	if (dxl_get_rxpacket_error(ERRBIT_OVERHEAT) == 1)
+		printf("Overheat error!\n");
+
+	if (dxl_get_rxpacket_error(ERRBIT_RANGE) == 1)
+		printf("Out of range error!\n");
+
+	if (dxl_get_rxpacket_error(ERRBIT_CHECKSUM) == 1)
+		printf("Checksum error!\n");
+
+	if (dxl_get_rxpacket_error(ERRBIT_OVERLOAD) == 1)
+		printf("Overload error!\n");
+
+	if (dxl_get_rxpacket_error(ERRBIT_INSTRUCTION) == 1)
+		printf("Instruction code error!\n");
 }

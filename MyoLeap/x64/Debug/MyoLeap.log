@@ -1,13 +1,18 @@
 ﻿  MyoLeap.cpp
-c:\users\chris sheng\documents\github\myo-leap\myoleap\myo\include\myo\cxx\detail\throwonerror.hpp(39): warning C4297: 'myo::ThrowOnError::~ThrowOnError': function assumed not to throw an exception but does
-  c:\users\chris sheng\documents\github\myo-leap\myoleap\myo\include\myo\cxx\detail\throwonerror.hpp(39): note: destructor or deallocator has a (possibly implicit) non-throwing exception specification
-c:\users\chris sheng\documents\github\myo-leap\myoleap\myo\include\myo\cxx\detail\throwonerror.hpp(45): warning C4297: 'myo::ThrowOnError::~ThrowOnError': function assumed not to throw an exception but does
-  c:\users\chris sheng\documents\github\myo-leap\myoleap\myo\include\myo\cxx\detail\throwonerror.hpp(45): note: destructor or deallocator has a (possibly implicit) non-throwing exception specification
-c:\users\chris sheng\documents\github\myo-leap\myoleap\myoleap.cpp(377): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
-c:\users\chris sheng\documents\github\myo-leap\myoleap\myoleap.cpp(478): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\users\chris sheng\documents\github\myo-leap\myoleap\myoleap.cpp(362): warning C4101: 'buf': unreferenced local variable
-c:\users\chris sheng\documents\github\myo-leap\myoleap\myoleap.cpp(382): warning C4101: 'str': unreferenced local variable
-  MyoLeap.vcxproj -> C:\Users\Chris Sheng\Documents\GitHub\Myo-Leap\x64\Debug\MyoLeap.exe
-  MyoLeap.vcxproj -> C:\Users\Chris Sheng\Documents\GitHub\Myo-Leap\x64\Debug\MyoLeap.pdb (Partial PDB)
-  C:\Users\Chris Sheng\Documents\GitHub\Myo-Leap\MyoLeap\LeapSDK\lib\x64\Leap.dll
+l:\roozbeh\github\myo-leap\myoleap\myo\include\myo\cxx\detail\throwonerror.hpp(39): warning C4297: 'myo::ThrowOnError::~ThrowOnError': function assumed not to throw an exception but does
+  l:\roozbeh\github\myo-leap\myoleap\myo\include\myo\cxx\detail\throwonerror.hpp(39): note: destructor or deallocator has a (possibly implicit) non-throwing exception specification
+l:\roozbeh\github\myo-leap\myoleap\myo\include\myo\cxx\detail\throwonerror.hpp(45): warning C4297: 'myo::ThrowOnError::~ThrowOnError': function assumed not to throw an exception but does
+  l:\roozbeh\github\myo-leap\myoleap\myo\include\myo\cxx\detail\throwonerror.hpp(45): note: destructor or deallocator has a (possibly implicit) non-throwing exception specification
+l:\roozbeh\github\myo-leap\myoleap\myoleap.cpp(380): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+l:\roozbeh\github\myo-leap\myoleap\myoleap.cpp(403): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
+l:\roozbeh\github\myo-leap\myoleap\myoleap.cpp(517): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+l:\roozbeh\github\myo-leap\myoleap\myoleap.cpp(522): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+l:\roozbeh\github\myo-leap\myoleap\myoleap.cpp(425): warning C4101: 'CommStatus': unreferenced local variable
+l:\roozbeh\github\myo-leap\myoleap\myoleap.cpp(388): warning C4101: 'buf': unreferenced local variable
+l:\roozbeh\github\myo-leap\myoleap\myoleap.cpp(424): warning C4101: 'PresentPos': unreferenced local variable
+l:\roozbeh\github\myo-leap\myoleap\myoleap.cpp(424): warning C4101: 'Moving': unreferenced local variable
+l:\roozbeh\github\myo-leap\myoleap\myoleap.cpp(408): warning C4101: 'str': unreferenced local variable
+  MyoLeap.vcxproj -> L:\Roozbeh\GitHub\Myo-Leap\x64\Debug\MyoLeap.exe
+  MyoLeap.vcxproj -> L:\Roozbeh\GitHub\Myo-Leap\x64\Debug\MyoLeap.pdb (Partial PDB)
+  L:\Roozbeh\GitHub\Myo-Leap\MyoLeap\LeapSDK\lib\x64\Leap.dll
   1 File(s) copied
