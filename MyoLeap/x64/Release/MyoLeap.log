@@ -1,0 +1,89 @@
+﻿  MyoLeap.cpp
+l:\roozbeh\github\myo-leap\myoleap\myo\include\myo\cxx\impl\../detail/ThrowOnError.hpp(39): warning C4297: 'myo::ThrowOnError::~ThrowOnError': function assumed not to throw an exception but does
+  l:\roozbeh\github\myo-leap\myoleap\myo\include\myo\cxx\impl\../detail/ThrowOnError.hpp(39): note: destructor or deallocator has a (possibly implicit) non-throwing exception specification
+l:\roozbeh\github\myo-leap\myoleap\myo\include\myo\cxx\impl\../detail/ThrowOnError.hpp(45): warning C4297: 'myo::ThrowOnError::~ThrowOnError': function assumed not to throw an exception but does
+  l:\roozbeh\github\myo-leap\myoleap\myo\include\myo\cxx\impl\../detail/ThrowOnError.hpp(45): note: destructor or deallocator has a (possibly implicit) non-throwing exception specification
+MyoLeap.cpp(387): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+MyoLeap.cpp(410): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
+MyoLeap.cpp(551): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+MyoLeap.cpp(432): warning C4101: 'CommStatus': unreferenced local variable
+MyoLeap.cpp(395): warning C4101: 'buf': unreferenced local variable
+MyoLeap.cpp(431): warning C4101: 'PresentPos': unreferenced local variable
+MyoLeap.cpp(431): warning C4101: 'Moving': unreferenced local variable
+MyoLeap.cpp(415): warning C4101: 'str': unreferenced local variable
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_event_get_myo
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_event_get_type
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_set_stream_emg
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_event_get_accelerometer
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_event_get_warmup_result
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_event_get_pose
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_event_get_gyroscope
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_event_get_battery_level
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_event_get_firmware_version
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_free_error_details
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_event_get_timestamp
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_event_get_orientation
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_error_cstring
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_error_kind
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_event_get_arm
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_event_get_emg
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_run
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_event_get_rotation_on_arm
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: struct Leap::Vector __cdecl Leap::Pointable::direction(void)const " (__imp_?direction@Pointable@Leap@@QEBA?AUVector@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: struct Leap::Vector __cdecl Leap::Pointable::tipPosition(void)const " (__imp_?tipPosition@Pointable@Leap@@QEBA?AUVector@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) protected: static void __cdecl Leap::Interface::deleteCString(char const *)" (__imp_?deleteCString@Interface@Leap@@KAXPEBD@Z)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) protected: virtual __cdecl Leap::Interface::~Interface(void)" (__imp_??1Interface@Leap@@MEAA@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::Gesture __cdecl Leap::GestureList::operator[](int)const " (__imp_??AGestureList@Leap@@QEBA?AVGesture@1@H@Z)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: bool __cdecl Leap::GestureList::isEmpty(void)const " (__imp_?isEmpty@GestureList@Leap@@QEBA_NXZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: int __cdecl Leap::GestureList::count(void)const " (__imp_?count@GestureList@Leap@@QEBAHXZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: bool __cdecl Leap::Hand::isLeft(void)const " (__imp_?isLeft@Hand@Leap@@QEBA_NXZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::Arm __cdecl Leap::Hand::arm(void)const " (__imp_?arm@Hand@Leap@@QEBA?AVArm@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: struct Leap::Vector __cdecl Leap::Hand::direction(void)const " (__imp_?direction@Hand@Leap@@QEBA?AUVector@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: struct Leap::Vector __cdecl Leap::Hand::palmNormal(void)const " (__imp_?palmNormal@Hand@Leap@@QEBA?AUVector@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: struct Leap::Vector __cdecl Leap::Hand::palmPosition(void)const " (__imp_?palmPosition@Hand@Leap@@QEBA?AUVector@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::FingerList __cdecl Leap::Hand::fingers(void)const " (__imp_?fingers@Hand@Leap@@QEBA?AVFingerList@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: __cdecl Leap::ScreenTapGesture::ScreenTapGesture(class Leap::Gesture const &)" (__imp_??0ScreenTapGesture@Leap@@QEAA@AEBVGesture@1@@Z)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: int __cdecl Leap::Gesture::id(void)const " (__imp_?id@Gesture@Leap@@QEBAHXZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: enum Leap::Gesture::State __cdecl Leap::Gesture::state(void)const " (__imp_?state@Gesture@Leap@@QEBA?AW4State@12@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: enum Leap::Gesture::Type __cdecl Leap::Gesture::type(void)const " (__imp_?type@Gesture@Leap@@QEBA?AW4Type@12@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::ConstListIterator<class Leap::HandList,class Leap::Hand> __cdecl Leap::HandList::end(void)const " (__imp_?end@HandList@Leap@@QEBA?AV?$ConstListIterator@VHandList@Leap@@VHand@2@@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::ConstListIterator<class Leap::HandList,class Leap::Hand> __cdecl Leap::HandList::begin(void)const " (__imp_?begin@HandList@Leap@@QEBA?AV?$ConstListIterator@VHandList@Leap@@VHand@2@@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::Hand __cdecl Leap::HandList::operator[](int)const " (__imp_??AHandList@Leap@@QEBA?AVHand@1@H@Z)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: bool __cdecl Leap::HandList::isEmpty(void)const " (__imp_?isEmpty@HandList@Leap@@QEBA_NXZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: __cdecl Leap::SwipeGesture::SwipeGesture(class Leap::Gesture const &)" (__imp_??0SwipeGesture@Leap@@QEAA@AEBVGesture@1@@Z)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::Device __cdecl Leap::DeviceList::operator[](int)const " (__imp_??ADeviceList@Leap@@QEBA?AVDevice@1@H@Z)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: int __cdecl Leap::DeviceList::count(void)const " (__imp_?count@DeviceList@Leap@@QEBAHXZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::ConstListIterator<class Leap::ToolList,class Leap::Tool> __cdecl Leap::ToolList::end(void)const " (__imp_?end@ToolList@Leap@@QEBA?AV?$ConstListIterator@VToolList@Leap@@VTool@2@@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::ConstListIterator<class Leap::ToolList,class Leap::Tool> __cdecl Leap::ToolList::begin(void)const " (__imp_?begin@ToolList@Leap@@QEBA?AV?$ConstListIterator@VToolList@Leap@@VTool@2@@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::Tool __cdecl Leap::ToolList::operator[](int)const " (__imp_??AToolList@Leap@@QEBA?AVTool@1@H@Z)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: void __cdecl Leap::Controller::enableGesture(enum Leap::Gesture::Type,bool)const " (__imp_?enableGesture@Controller@Leap@@QEBAXW4Type@Gesture@2@_N@Z)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::DeviceList __cdecl Leap::Controller::devices(void)const " (__imp_?devices@Controller@Leap@@QEBA?AVDeviceList@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::Frame __cdecl Leap::Controller::frame(int)const " (__imp_?frame@Controller@Leap@@QEBA?AVFrame@2@H@Z)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: void __cdecl Leap::Controller::setPolicy(enum Leap::Controller::PolicyFlag)const " (__imp_?setPolicy@Controller@Leap@@QEBAXW4PolicyFlag@12@@Z)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: virtual __cdecl Leap::Controller::~Controller(void)" (__imp_??1Controller@Leap@@UEAA@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: __cdecl Leap::Controller::Controller(void)" (__imp_??0Controller@Leap@@QEAA@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::Pointable __cdecl Leap::CircleGesture::pointable(void)const " (__imp_?pointable@CircleGesture@Leap@@QEBA?AVPointable@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: float __cdecl Leap::CircleGesture::progress(void)const " (__imp_?progress@CircleGesture@Leap@@QEBAMXZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: struct Leap::Vector __cdecl Leap::CircleGesture::normal(void)const " (__imp_?normal@CircleGesture@Leap@@QEBA?AUVector@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: __cdecl Leap::CircleGesture::CircleGesture(class Leap::Gesture const &)" (__imp_??0CircleGesture@Leap@@QEAA@AEBVGesture@1@@Z)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::ConstListIterator<class Leap::FingerList,class Leap::Finger> __cdecl Leap::FingerList::end(void)const " (__imp_?end@FingerList@Leap@@QEBA?AV?$ConstListIterator@VFingerList@Leap@@VFinger@2@@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::ConstListIterator<class Leap::FingerList,class Leap::Finger> __cdecl Leap::FingerList::begin(void)const " (__imp_?begin@FingerList@Leap@@QEBA?AV?$ConstListIterator@VFingerList@Leap@@VFinger@2@@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::Finger __cdecl Leap::FingerList::operator[](int)const " (__imp_??AFingerList@Leap@@QEBA?AVFinger@1@H@Z)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::GestureList __cdecl Leap::Frame::gestures(void)const " (__imp_?gestures@Frame@Leap@@QEBA?AVGestureList@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::Gesture __cdecl Leap::Frame::gesture(int)const " (__imp_?gesture@Frame@Leap@@QEBA?AVGesture@2@H@Z)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::ToolList __cdecl Leap::Frame::tools(void)const " (__imp_?tools@Frame@Leap@@QEBA?AVToolList@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::HandList __cdecl Leap::Frame::hands(void)const " (__imp_?hands@Frame@Leap@@QEBA?AVHandList@2@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) private: char const * __cdecl Leap::Device::toCString(void)const " (__imp_?toCString@Device@Leap@@AEBAPEBDXZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: bool __cdecl Leap::Device::isStreaming(void)const " (__imp_?isStreaming@Device@Leap@@QEBA_NXZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: enum Leap::Finger::Type __cdecl Leap::Finger::type(void)const " (__imp_?type@Finger@Leap@@QEBA?AW4Type@12@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: class Leap::Bone __cdecl Leap::Finger::bone(enum Leap::Bone::Type)const " (__imp_?bone@Finger@Leap@@QEBA?AVBone@2@W4Type@32@@Z)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: __cdecl Leap::KeyTapGesture::KeyTapGesture(class Leap::Gesture const &)" (__imp_??0KeyTapGesture@Leap@@QEAA@AEBVGesture@1@@Z)
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_init_hub
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_shutdown_hub
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_event_get_warmup_state
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_event_get_rssi
+MyoLeap.obj : error LNK2001: unresolved external symbol __imp_libmyo_event_get_x_direction
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: virtual void __cdecl Leap::Listener::onImages(class Leap::Controller const &)" (__imp_?onImages@Listener@Leap@@UEAAXAEBVController@2@@Z)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: virtual __cdecl Leap::Listener::~Listener(void)" (__imp_??1Listener@Leap@@UEAA@XZ)
+MyoLeap.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: __cdecl Leap::Listener::Listener(void)" (__imp_??0Listener@Leap@@QEAA@XZ)
+L:\Roozbeh\GitHub\Myo-Leap\x64\Release\MyoLeap.exe : fatal error LNK1120: 75 unresolved externals

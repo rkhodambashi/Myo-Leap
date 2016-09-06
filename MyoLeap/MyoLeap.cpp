@@ -31,7 +31,7 @@
 #include <windows.h>
 #include <conio.h>
 #include "dynamixel.h"
-
+//#include "FingerLib.h"
 #pragma comment(lib,"ws2_32.lib")
 #pragma comment(lib, "dynamixel.lib")
 
@@ -39,15 +39,25 @@
 using namespace Leap;
 using namespace std;
 
-// UDP set up
+// UDP set up========================
 #define SERVER "127.0.0.1" //ip address of udp server
 //#define SERVER "128.61.126.213"  //ip address of udp server
 
 #define BUFLEN 512  //Max length of buffer
 #define PORT 8888  //The port on which to listen for incoming data
+void PrintCommStatus(int CommStatus);
+void PrintErrorCode();
+struct sockaddr_in si_other;
+int s, slen = sizeof(si_other);
+char buf[BUFLEN];
+char message[BUFLEN];
+WSADATA wsa;
+//===================================
 
-// Control table address
+// Dynamixel=========================
+//Control table address
 #define P_GOAL_POSITION_L		30
+#define P_VELOCITY_L			32
 #define P_GOAL_POSITION_H		31
 #define P_PRESENT_POSITION_L	36
 #define P_PRESENT_POSITION_H	37
@@ -58,21 +68,20 @@ int P_GOAL_POSITION_Index;
 int P_GOAL_POSITION_Middle;
 int P_GOAL_POSITION_Ring;
 int P_GOAL_POSITION_Pinky;
-
 // Defulat setting
-#define DEFAULT_PORTNUM		6 // COM3
-#define DEFAULT_BAUDNUM		7 // 1Mbps
-#define DEFAULT_ID			4
+#define DEFAULT_PORTNUM		6 // COM6
+#define DEFAULT_BAUDNUM		7 // 250000Kbps
+#define THUMB_MOTOR_ID			5
+#define INDEX_MOTOR_ID			4
+#define MIDDLE_MOTOR_ID			3
+#define RING_MOTOR_ID			2
+#define PINKY_MOTOR_ID			1
+//===================================
 
 
-void PrintCommStatus(int CommStatus);
-void PrintErrorCode();
-//struct sockaddr_in si_other;
-//int s, slen = sizeof(si_other);
-//char buf[BUFLEN];
-//char message[BUFLEN];
-//WSADATA wsa;
-//
+
+
+
 ///// <summary>
 ///// Entry point for the application
 ///// </summary>
@@ -88,32 +97,32 @@ void PrintErrorCode();
 //	_In_ int nShowCmd
 //)
 //{
-//	//Initialise winsock
-//	printf("\nInitialising Winsock...");
-//	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
-//	{
-//		printf("Failed. Error Code : %d", WSAGetLastError());
-//		exit(EXIT_FAILURE);
-//	}
-//	printf("Initialised.\n");
-//
-//	//create socket
-//	//if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == SOCKET_ERROR)
-//	if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
-//	{
-//		printf("socket() failed with error code : %d", WSAGetLastError());
-//		exit(EXIT_FAILURE);
-//	}
-//
-//	//setup address structure
-//	memset((char *)&si_other, 0, sizeof(si_other));
-//	si_other.sin_family = AF_INET;
-//	si_other.sin_port = htons(PORT);
-//	//si_other.sin_addr.S_un.S_addr = inet_addr(SERVER);
-//	si_other.sin_addr.S_un.S_addr = inet_pton(AF_INET, SERVER, &(si_other.sin_addr));
-//
-//	//closesocket(s);
-//	//WSACleanup();
+	////Initialise winsock
+	//printf("\nInitialising Winsock...");
+	//if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+	//{
+	//	printf("Failed. Error Code : %d", WSAGetLastError());
+	//	exit(EXIT_FAILURE);
+	//}
+	//printf("Initialised.\n");
+
+	////create socket
+	////if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == SOCKET_ERROR)
+	//if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
+	//{
+	//	printf("socket() failed with error code : %d", WSAGetLastError());
+	//	exit(EXIT_FAILURE);
+	//}
+
+	////setup address structure
+	//memset((char *)&si_other, 0, sizeof(si_other));
+	//si_other.sin_family = AF_INET;
+	//si_other.sin_port = htons(PORT);
+	////si_other.sin_addr.S_un.S_addr = inet_addr(SERVER);
+	//si_other.sin_addr.S_un.S_addr = inet_pton(AF_INET, SERVER, &(si_other.sin_addr));
+
+	//closesocket(s);
+	//WSACleanup();
 //}
 /*
 // Helper function for textual date and time.
@@ -125,12 +134,12 @@ static char *getTm(char *buff) {
 	time_t t = time(0);
 	strftime(buff, TMSZ, TMFMT, localtime(&t));
 	return buff;
-}
+} 
 */
 
 std::stack<clock_t> tictoc_stack;   // adding clock_t to the stack
 ofstream myfile;
-
+ofstream myfile2;
 
 class DataCollector : public myo::DeviceListener {
 	friend class SampleListener;
@@ -138,11 +147,13 @@ public:
 	DataCollector()
 		: emgSamples()
 	{
-		myfile.open("MyoLeap.txt");//, ios::out | ios::app | ios::ate);
+		myfile.open("LeapData.txt");//, ios::out | ios::app | ios::ate);
+		myfile2.open("MyoData.txt");
 	}
 
 	~DataCollector() {
 		myfile.close();
+		myfile2.close();
 	}
 
 	void tic() {
@@ -187,7 +198,7 @@ public:
 
 			//myfile<<endl;
 			//myfile << '[' << emgString << std::string(4 - emgString.size(), ' ') << ']'; 
-			myfile << emgString << ' ';
+			myfile2 << emgString << ' ';
 			//count++;
 		}
 		/*myfile << "Time elapsed: "
@@ -423,16 +434,19 @@ int main(int argc, char** argv)
 	int index = 0;
 	int Moving, PresentPos;
 	int CommStatus;
-	// Open device MOTORS
-	if (dxl_initialize(DEFAULT_PORTNUM, DEFAULT_BAUDNUM) == 0)
-	{
-		printf("Failed to open USB2Dynamixel!\n");
-		printf("Press any key to terminate...\n");
-		//getch();
-		return 0;
-	}
-	else
-		printf("Succeed to open USB2Dynamixel!\n");
+	//===============================================
+	// Open device MOTORS. Use these lines if directly controlling the dynamixels through serial port and usbtodunamixel. If sending data with UDP, leave these lines commented
+	//if (dxl_initialize(DEFAULT_PORTNUM, DEFAULT_BAUDNUM) == 0)
+	//{
+	//	printf("Failed to open USB2Dynamixel!\n");
+	//	printf("Press any key to terminate...\n");
+	//	//getch();
+	//	return 0;
+	//}
+	//else
+	//	printf("Succeed to open USB2Dynamixel!\n");
+	//================================================
+
 
 	// We catch any exceptions that might occur below -- see the catch statement for more details.
 	try {
@@ -467,8 +481,14 @@ int main(int argc, char** argv)
 		// Next we construct an instance of our DeviceListener, so that we can register it with the Hub.
 		DataCollector collector;
 		double timeElasped = 0.000;
-		const double minMax[10] = { 38, 85, 36, 104, 37, 111, 36, 105, 36, 96 }; // Min and Max values for each finger T.I.M.R.P 
-		const int minMaxMotors[10] = { 0, 0, 500, 1100, 0, 0, 0, 0, 0, 0 };
+		const double minMax[10] = { 50, 95, 60, 112, 60, 100, 70, 105, 55, 100 }; // Min and Max values for each finger T.I.M.R.P 
+		
+		//This is for the Dynamixels
+		const int minMaxMotors[10] = { 1100, 1400, 500, 1100, 1100, 700, 1100, 350, 700, 1200 };
+		
+		//This is for the OpenBionics Hand
+		//const int minMaxMotors[10] = { 110, 975, 110, 975, 110, 975, 110, 975, 110, 975 };
+		
 		// Hub::addListener() takes the address of any object whose class inherits from DeviceListener, and will cause
 		// Hub::run() to send events to all registered device listeners.
 		hub.addListener(&collector);
@@ -481,10 +501,10 @@ int main(int argc, char** argv)
 		
 		// Finally we enter our main loop.
 		while (1) {
-			//collector.tic();
+			collector.tic();
 			// In each iteration of our main loop, we run the Myo event loop for a set number of milliseconds.
-			// In this case, we wish to update our display 50 times a second, so we run for 1000/20 milliseconds.
-			hub.run(1000 / 100);
+			// In this case, we wish to update our display 20 times a second, so we run for 1000/20 milliseconds.
+			hub.run(1000 / 60);
 			// After processing events, we call the print() member function we defined above to print out the values we've
 			// obtained from any events that have occurred.
 			collector.print();
@@ -503,20 +523,36 @@ int main(int argc, char** argv)
 				for (FingerList::const_iterator fl = fingers.begin(); fl != fingers.end(); ++fl) {
 					const Finger finger = *fl;
 
-					/*myfile << std::string(4, ' ') << fingerNames[finger.type()]
-						<< ": " << hand.palmPosition().distanceTo(finger.tipPosition());*/
+					myfile << hand.palmPosition().distanceTo(finger.tipPosition()) << " ";
 					/*myfile << std::string(4, ' ') << fingerNames[finger.type()]
 						<< ": " << listener.mapping(hand.palmPosition().distanceTo(finger.tipPosition()), minMax[i + i], minMax[i + j]);*/
-					fingDis[h] = listener.mapping(hand.palmPosition().distanceTo(finger.tipPosition()), minMax[i + 1], minMax[i + j], minMaxMotors[i + 1], minMaxMotors[i + j]);
-					//fingDis[h] = hand.palmPosition().distanceTo(finger.tipPosition());
+					
+					//print mapped values
+					//fingDis[h] = listener.mapping(hand.palmPosition().distanceTo(finger.tipPosition()), minMax[i + i], minMax[i + j], minMaxMotors[i + i], minMaxMotors[i + j]);
+					
+					//Print raw values
+					fingDis[h] = hand.palmPosition().distanceTo(finger.tipPosition());
+					
 					i++;
 					j++;
 					h++;
 						if (i == 5 && j == 6 && h == 5)
 						{
-							dxl_write_word(DEFAULT_ID, P_GOAL_POSITION_L, fingDis[1]);
+							
+							/*dxl_write_word(THUMB_MOTOR_ID, P_GOAL_POSITION_L, fingDis[0]);
+							dxl_write_word(THUMB_MOTOR_ID, P_VELOCITY_L, 100);
+							dxl_write_word(INDEX_MOTOR_ID, P_GOAL_POSITION_L, fingDis[1]);
+							dxl_write_word(INDEX_MOTOR_ID, P_VELOCITY_L, 100);
+							dxl_write_word(MIDDLE_MOTOR_ID, P_GOAL_POSITION_L, fingDis[2]);
+							dxl_write_word(MIDDLE_MOTOR_ID, P_VELOCITY_L, 100);
+							dxl_write_word(RING_MOTOR_ID, P_GOAL_POSITION_L, fingDis[3]);
+							dxl_write_word(RING_MOTOR_ID, P_VELOCITY_L, 100);
+							dxl_write_word(PINKY_MOTOR_ID, P_GOAL_POSITION_L, fingDis[4]);
+							dxl_write_word(PINKY_MOTOR_ID, P_VELOCITY_L, 100);				*/
+							
+
 							//send over UDP
-							string tmp = to_string(fingDis[0]) + " " + to_string(fingDis[1]) + " " + to_string(fingDis[2]) + " " + to_string(fingDis[3]) + " " + to_string(fingDis[4]);
+							string tmp = to_string(fingDis[0]) + " "+ to_string(fingDis[1]) + " " + to_string(fingDis[2]) + " " + to_string(fingDis[3]) + " " + to_string(fingDis[4]);
 							strcpy_s(message, tmp.c_str());
 							//send message
 							if (sendto(s, message, strlen(message), 0, (struct sockaddr *) &si_other, slen) == SOCKET_ERROR)
@@ -532,11 +568,12 @@ int main(int argc, char** argv)
 				}
 			}
 
-			//timeElasped = timeElasped + ((double)(clock() - tictoc_stack.top())) / CLOCKS_PER_SEC;
+			timeElasped = timeElasped + ((double)(clock() - tictoc_stack.top())) / CLOCKS_PER_SEC;
 			/*myfile << " Time elapsed: "
 				<< ((double)(clock() - tictoc_stack.top())) / CLOCKS_PER_SEC;*/
-			//tictoc_stack.pop();
-			//myfile << " Time elasped: " << timeElasped << endl;
+			tictoc_stack.pop();
+			myfile << timeElasped << endl;
+			myfile2 << timeElasped << endl;
 
 		}
 		
